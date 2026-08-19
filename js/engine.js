@@ -74,18 +74,24 @@ export class Input {
     this.aimActive = false;
     this.usingMouse = true;
     this.touch = false;
+    this.playing = false;
     this.padAim = false;
     this.padSlide = false;
     this._sticks = { move: null, aim: null };
     this._gpFire = false;
+    this._gameKeys = new Set([
+      "w", "a", "s", "d", " ", "q", "r", "p", "escape", "shift", "control",
+      "arrowup", "arrowdown", "arrowleft", "arrowright", "tab",
+    ]);
 
     addEventListener("keydown", (e) => {
-      const k = e.key.toLowerCase();
-      if ([" ", "arrowup", "arrowdown", "arrowleft", "arrowright"].includes(k) || k === "tab") e.preventDefault();
+      const k = this._mapKey(e);
+      if (this.playing && (this._gameKeys.has(k) || k === "tab")) e.preventDefault();
+      else if (k === "tab") e.preventDefault();
       if (!this.keys.has(k)) this.just.add(k);
       this.keys.add(k);
     });
-    addEventListener("keyup", (e) => this.keys.delete(e.key.toLowerCase()));
+    addEventListener("keyup", (e) => this.keys.delete(this._mapKey(e)));
     addEventListener("blur", () => this.keys.clear());
     addEventListener("mousemove", (e) => {
       this.mx = e.clientX;
@@ -180,6 +186,20 @@ export class Input {
     el.addEventListener("pointermove", move);
     el.addEventListener("pointerup", end);
     el.addEventListener("pointercancel", end);
+  }
+
+  _mapKey(e) {
+    const codes = {
+      KeyW: "w", KeyA: "a", KeyS: "s", KeyD: "d",
+      Space: " ", KeyQ: "q", KeyR: "r", KeyP: "p",
+      Escape: "escape", ShiftLeft: "shift", ShiftRight: "shift",
+      ControlLeft: "control", ControlRight: "control",
+      ArrowUp: "arrowup", ArrowDown: "arrowdown",
+      ArrowLeft: "arrowleft", ArrowRight: "arrowright",
+      Tab: "tab",
+    };
+    if (codes[e.code]) return codes[e.code];
+    return (e.key || "").toLowerCase();
   }
 
   pressed(k) {

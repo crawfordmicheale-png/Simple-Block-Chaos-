@@ -242,7 +242,7 @@ export class Game {
     this.run = {
       shape: def,
       x: WORLD.w / 2,
-      y: WORLD.h / 2,
+      y: WORLD.h / 2 - 260,
       vx: 0,
       vy: 0,
       r: 14,
@@ -256,7 +256,7 @@ export class Game {
       dashCd: [0, 0, 0, 0, 0, 0],
       dashing: 0,
       dashDir: [1, 0],
-      invuln: 0,
+      invuln: 1.35,
       hurtFlash: 0,
       slide: 0,
       fireCd: 0,
@@ -316,6 +316,7 @@ export class Game {
     this.slow = 1;
     this.hitstop = 0;
     this.tut = { move: false, fire: false, dash: this.save.runs > 0 };
+    if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
     this.show("playing");
     this.nextWave();
     this.syncHud();
@@ -357,6 +358,11 @@ export class Game {
     r.plan = plan;
     r.spawnLeft = plan.budget;
     r.spawnAcc = 0;
+    if (plan.budget > 0) {
+      const burst = Math.min(4, plan.budget);
+      for (let i = 0; i < burst; i++) this.spawnAtEdge(pick(plan.glyphs));
+      r.spawnLeft -= burst;
+    }
     this.flash(plan.shop ? "PRINTER" : plan.boss ? plan.name : `WAVE ${String(r.wave).padStart(2, "0")}  ${plan.name}`);
     if (plan.shop) {
       r.spawning = false;
@@ -418,13 +424,15 @@ export class Game {
 
   spawnAtEdge(glyph) {
     const p = this.run;
-    let x, y;
-    const side = (Math.random() * 4) | 0;
-    if (side === 0) { x = rand(80, WORLD.w - 80); y = 70; }
-    if (side === 1) { x = rand(80, WORLD.w - 80); y = WORLD.h - 70; }
-    if (side === 2) { x = 70; y = rand(80, WORLD.h - 80); }
-    if (side === 3) { x = WORLD.w - 70; y = rand(80, WORLD.h - 80); }
-    if (dist(x, y, p.x, p.y) < 180) return this.spawnAtEdge(glyph);
+    let x, y, tries = 0;
+    do {
+      const side = (Math.random() * 4) | 0;
+      if (side === 0) { x = rand(80, WORLD.w - 80); y = 80; }
+      else if (side === 1) { x = rand(80, WORLD.w - 80); y = WORLD.h - 80; }
+      else if (side === 2) { x = 80; y = rand(80, WORLD.h - 80); }
+      else { x = WORLD.w - 80; y = rand(80, WORLD.h - 80); }
+      tries += 1;
+    } while (dist(x, y, p.x, p.y) < 220 && tries < 12);
     this.spawnEnemy(glyph, x, y);
   }
 
@@ -433,6 +441,7 @@ export class Game {
     let frame = Math.min(0.05, (now - this.last) / 1000);
     this.last = now;
     this.input.poll(this.canvas);
+    this.input.playing = this.screen === "playing";
     if (this.input.pressed("escape") || this.input.pressed("p")) {
       if (this.screen === "playing") this.pause();
       else if (this.screen === "pause") this.resume();
@@ -1368,7 +1377,9 @@ export class Game {
       ctx.translate(b.x, b.y);
       ctx.rotate(ang(b.vx, b.vy));
       ctx.fillStyle = b.color;
-      ctx.fillRect(-b.r * 1.8, -b.r * 0.55, b.r * 3.2, b.r * 1.1);
+      ctx.shadowColor = b.color;
+      ctx.shadowBlur = 8;
+      ctx.fillRect(-b.r * 2.4, -b.r * 0.6, b.r * 4.4, b.r * 1.2);
       ctx.restore();
     }
 

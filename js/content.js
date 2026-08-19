@@ -101,7 +101,7 @@ export const SHAPES = {
 };
 
 export const WEAPONS = {
-  pulse: { id: "pulse", name: "PULSE", dmg: 1, cd: 0.095, pellets: 1, spread: 0.04, speed: 780, life: 0.7, size: 3.4, pierce: 0, knock: 40, recoil: 18 },
+  pulse: { id: "pulse", name: "PULSE", dmg: 1, cd: 0.085, pellets: 1, spread: 0.03, speed: 860, life: 0.72, size: 4.2, pierce: 0, knock: 48, recoil: 16 },
   slug: { id: "slug", name: "SLUG", dmg: 3, cd: 0.34, pellets: 1, spread: 0.01, speed: 620, life: 0.85, size: 6.2, pierce: 0, knock: 140, recoil: 70 },
   needle: { id: "needle", name: "NEEDLE", dmg: 1, cd: 0.11, pellets: 1, spread: 0.02, speed: 980, life: 0.65, size: 2.4, pierce: 2, knock: 20, recoil: 10 },
   rail: { id: "rail", name: "RAIL", dmg: 5, cd: 0.72, pellets: 1, spread: 0, speed: 2200, life: 0.18, size: 3, pierce: 8, knock: 80, recoil: 40, charge: true },
@@ -165,8 +165,8 @@ const DIGIT = (n) => ({
   glyph: String(n),
   name: `DIGIT ${n}`,
   hp: n,
-  speed: 72 + (9 - n) * 10,
-  radius: 11 + n * 0.9,
+  speed: 58 + (9 - n) * 7,
+  radius: 12 + n * 0.95,
   contact: 1,
   color: n >= 7 ? "#ff9a4a" : "#ff6b4a",
   kind: "digit",
