@@ -150,11 +150,14 @@ canvas#view {
   display: none;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 28px 20px 40px;
+  justify-content: flex-start;
+  padding: 24px 20px 36px;
   background: linear-gradient(180deg, rgba(9,11,16,0.55), rgba(9,11,16,0.88));
   pointer-events: auto;
   overflow: auto;
+}
+#screen-title, #screen-pause, #screen-results, #screen-levelup, #screen-shop {
+  justify-content: center;
 }
 .screen.active { display: flex; }
 .screen.dim { background: rgba(9,11,16,0.72); }
@@ -162,7 +165,7 @@ canvas#view {
 h1 {
   font-family: Syne, Outfit, sans-serif;
   font-weight: 800;
-  font-size: clamp(56px, 12vw, 112px);
+  font-size: clamp(48px, 10vw, 96px);
   line-height: 0.86;
   letter-spacing: -0.04em;
   text-align: center;
@@ -184,7 +187,7 @@ h3 {
   letter-spacing: 0.22em;
   font-size: 12px;
   text-transform: lowercase;
-  margin: 10px 0 28px;
+  margin: 8px 0 20px;
   text-align: center;
 }
 .kicker { color: var(--coral); margin-bottom: 0; }
