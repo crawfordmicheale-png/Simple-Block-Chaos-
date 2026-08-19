@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#090b10" />
+  <title>BLOCK CHAOS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@340;460;600;760&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div id="app">
+    <canvas id="view"></canvas>
+
+    <div id="hud" class="hidden">
+      <div class="hud-top">
+        <div class="xp-track"><div id="xp-fill"></div></div>
+        <div class="hud-meta">
+          <span id="wave-label">WAVE 01</span>
+          <span id="combo-label"></span>
+          <span id="score-label">0</span>
+        </div>
+      </div>
+      <div class="hud-left">
+        <div id="hp-pips"></div>
+        <div id="dash-pips"></div>
+        <div id="special-cd"><i></i></div>
+      </div>
+      <div class="hud-right">
+        <div id="weapon-name">PULSE</div>
+        <div id="shape-name">CIRCLE</div>
+      </div>
+      <div id="banner"></div>
+      <div id="tut"></div>
+    </div>
+
+    <div id="touch" class="hidden">
+      <div class="stick" id="stick-move"><b></b></div>
+      <div class="stick" id="stick-aim"><b></b></div>
+      <button id="btn-dash" type="button">DASH</button>
+      <button id="btn-special" type="button">CAST</button>
+      <button id="btn-pause" type="button">II</button>
+    </div>
+
+    <div id="overlay">
+      <section id="screen-title" class="screen active">
+        <div class="title-mark">
+          <span class="geo g-circle"></span>
+          <span class="geo g-square"></span>
+          <span class="geo g-tri"></span>
+        </div>
+        <h1>BLOCK<br>CHAOS</h1>
+        <p class="tag">shapes versus the alphabet</p>
+        <div class="stack">
+          <button data-act="play" class="primary">PLAY</button>
+          <button data-act="shapes">SHAPES</button>
+          <button data-act="protocol">PROTOCOL</button>
+          <button data-act="intel">INTEL</button>
+        </div>
+        <p class="hint" id="best-line"></p>
+        <p class="controls-mini">WASD move · mouse aim · click fire · space dash · shift slide · Q special</p>
+      </section>
+
+      <section id="screen-shapes" class="screen">
+        <header class="bar">
+          <button data-act="title" class="ghost">BACK</button>
+          <h2>SHAPES</h2>
+          <span id="ink-shapes" class="ink"></span>
+        </header>
+        <div id="shape-grid" class="card-grid"></div>
+      </section>
+
+      <section id="screen-protocol" class="screen">
+        <header class="bar">
+          <button data-act="title" class="ghost">BACK</button>
+          <h2>PROTOCOL</h2>
+          <span id="ink-protocol" class="ink"></span>
+        </header>
+        <p class="lede">Permanent geometry. Spend INK after runs.</p>
+        <div id="skill-tree"></div>
+      </section>
+
+      <section id="screen-intel" class="screen">
+        <header class="bar">
+          <button data-act="title" class="ghost">BACK</button>
+          <h2>INTEL</h2>
+          <span></span>
+        </header>
+        <p class="lede">Glyphs you’ve dismantled. Numbers are their hit points. Letters have jobs.</p>
+        <div id="codex" class="codex"></div>
+      </section>
+
+      <section id="screen-pause" class="screen">
+        <h2>PAUSED</h2>
+        <div class="pause-grid">
+          <div>
+            <h3>MOVE</h3>
+            <p>WASD / left stick / left pad</p>
+            <h3>AIM + FIRE</h3>
+            <p>Mouse / right stick / right pad</p>
+            <h3>DASH</h3>
+            <p>Space / A / DASH — i-frames. Clip a shot for a perfect dodge.</p>
+            <h3>SLIDE</h3>
+            <p>Shift / LB — keep speed, smaller hurtbox, steer late.</p>
+          </div>
+          <div>
+            <h3>SPECIAL</h3>
+            <p>Q / LT / CAST</p>
+            <h3>PRECISION</h3>
+            <p>Ctrl — tighter spread, slower strafe</p>
+            <h3>SWAP</h3>
+            <p>R / Y — cycle carried weapons</p>
+            <h3>WALL KICK</h3>
+            <p>Dash into a wall at an angle to ricochet.</p>
+          </div>
+        </div>
+        <div class="stack row">
+          <button data-act="resume" class="primary">RESUME</button>
+          <button data-act="quit">ABORT RUN</button>
+        </div>
+      </section>
+
+      <section id="screen-levelup" class="screen dim">
+        <h2>MUTATION</h2>
+        <p class="lede">Pick one. The alphabet adapts either way.</p>
+        <div id="mut-cards" class="card-grid three"></div>
+      </section>
+
+      <section id="screen-shop" class="screen dim">
+        <h2>PRINTER</h2>
+        <p class="lede">Wave break. Spend run glyphs or walk.</p>
+        <div id="shop-cards" class="card-grid three"></div>
+        <button data-act="shop-skip" class="ghost">LEAVE</button>
+      </section>
+
+      <section id="screen-results" class="screen">
+        <p class="kicker" id="result-kicker">RUN OVER</p>
+        <h2 id="result-title">DISASSEMBLED</h2>
+        <div id="result-stats" class="stats"></div>
+        <div class="stack row">
+          <button data-act="again" class="primary">AGAIN</button>
+          <button data-act="title">HUB</button>
+        </div>
+      </section>
+    </div>
+  </div>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
